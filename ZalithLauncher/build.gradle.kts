@@ -153,13 +153,14 @@ android {
                 file("astra_release.jks").isFile -> {
                     signingConfigs.getByName("astraRelease")
                 }
-                file("zalith_launcher.jks").isFile -> {
-                    logger.lifecycle("BUILD: using the configured release keystore for this Astra build.")
-                    signingConfigs.getByName("releaseBuild")
+                file("astra_release.jks").isFile -> {
+                    signingConfigs.getByName("astraRelease")
                 }
                 else -> {
-                    logger.warn("BUILD: no release keystore found; falling back to debugBuild signing.")
-                    signingConfigs.getByName("debugBuild")
+                    // CI may not have release-signing secrets configured yet.
+                    // Use Android's generated debug key so alpha APKs remain installable.
+                    logger.warn("BUILD: Astra release keystore unavailable; using the standard Android debug signing key for this build.")
+                    signingConfigs.getByName("debug")
                 }
             }
             proguardFiles(
