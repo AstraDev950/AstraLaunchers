@@ -69,6 +69,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -145,7 +146,6 @@ fun WelcomeScreen(
                 ) {
                     // 终端卡片布局
                     WelcomeTerminal(
-                        isVisible = isVisible,
                         modifier = Modifier
                             .width(terminalWidth)
                             .fillMaxHeight()
@@ -221,143 +221,36 @@ private fun Modifier.welcomeEntrance(
 
 @Composable
 private fun WelcomeTerminal(
-    isVisible: Boolean,
     modifier: Modifier = Modifier
 ) {
-    var welcomeText by remember { mutableStateOf("") }
-    var welcomeFinished by remember { mutableStateOf(false) }
-    val cursorTransition = rememberInfiniteTransition(label = "WelcomeCursor")
-    // 终端指针循环动画
-    val cursorAlpha by cursorTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = keyframes {
-                durationMillis = 1000
-                1f at 0
-                1f at 499
-                0f at 500
-                0f at 999
-            },
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "WelcomeCursorAlpha"
-    )
-
-    // 控制WELCOME标题的打字动画
-    LaunchedEffect(Unit) {
-        welcomeText = ""
-        welcomeFinished = false
-        delay(700.milliseconds)
-        "WEL".forEach { character ->
-            welcomeText += character
-            delay(85.milliseconds)
-        }
-
-        // 中途小小休息
-        delay(420.milliseconds)
-
-        "COME!".forEach { character ->
-            welcomeText += character
-            delay(85.milliseconds)
-        }
-        welcomeFinished = true
-    }
-
-    Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(36.dp),
-        color = MaterialTheme.colorScheme.primaryContainer,
-        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+    Column(
+        modifier = modifier.padding(horizontal = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .offset(x = 32.dp, y = (-36).dp)
-                    .size(156.dp)
-                    .rotate(18f)
-                    .background(
-                        color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.16f),
-                        shape = RoundedCornerShape(44.dp)
-                    )
-            )
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .offset(x = (-30).dp, y = 30.dp)
-                    .size(116.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.14f),
-                        shape = CircleShape
-                    )
-            )
+        Image(
+            modifier = Modifier.size(76.dp),
+            painter = painterResource(R.drawable.astra_launcher_foreground),
+            contentDescription = BuildKeys.LAUNCHER_NAME
+        )
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(all = 28.dp)
-            ) {
-                // 左上角标签
-                Surface(
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
-                ) {
-                    Text(
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp),
-                        text = "♥ MADE WITH HEART ♥",
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.4.sp
-                    )
-                }
+        Spacer(modifier = Modifier.height(18.dp))
 
-                Spacer(modifier = Modifier.weight(1f))
+        Text(
+            text = BuildKeys.LAUNCHER_NAME,
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onBackground
+        )
 
-                Row(
-                    verticalAlignment = Alignment.Bottom
-                ) {
-                    Text(
-                        text = welcomeText,
-                        style = MaterialTheme.typography.displayLarge,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Black,
-                        fontSize = 56.sp,
-                        letterSpacing = (-2).sp,
-                        maxLines = 1
-                    )
-                    // 模拟终端指针
-                    Text(
-                        modifier = Modifier.alpha(cursorAlpha),
-                        text = "_",
-                        style = MaterialTheme.typography.displayLarge,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Black,
-                        fontSize = 56.sp,
-                        maxLines = 1
-                    )
-                }
+        Spacer(modifier = Modifier.height(6.dp))
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    modifier = Modifier.welcomeEntrance(
-                        isVisible = isVisible,
-                        durationMillis = 2000,
-                        enter = welcomeFinished,
-                        offsetX = 0.dp,
-                        offsetY = 48.dp
-                    ),
-                    text = stringResource(R.string.welcome_screen_subtitle),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.72f),
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                Spacer(modifier = Modifier.weight(1f))
-            }
-        }
+        Text(
+            text = stringResource(R.string.welcome_screen_subtitle),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.72f),
+            textAlign = TextAlign.Center
+        )
     }
 }
 
@@ -399,7 +292,6 @@ private fun TabletWelcomeScreen(
 
                 // 终端卡片布局
                 WelcomeTerminal(
-                    isVisible = isVisible,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(terminalHeight)
@@ -486,7 +378,7 @@ private fun ProductBanner(
     ) {
         Image(
             modifier = Modifier.size(52.dp),
-            painter = painterResource(R.drawable.img_launcher),
+            painter = painterResource(R.drawable.astra_launcher_foreground),
             contentDescription = null
         )
 
