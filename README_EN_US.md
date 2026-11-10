@@ -1,33 +1,29 @@
-# RayLauncher
+# Astra Launcher
 
 [English](README.md) | [简体中文](README_ZH_CN.md) | [繁體中文](README_ZH_TW.md)
 
 **An unofficial Minecraft: Java Edition launcher modification for Android.**
 
-RayLauncher is a community-maintained modification based on [Zalith Launcher 2](https://github.com/ZalithLauncher/ZalithLauncher2). It focuses on a customized launcher experience and interface improvements.
+Astra Launcher is maintained by **AstraDev** and is based on the RayLauncher modification of [Zalith Launcher 2](https://github.com/ZalithLauncher/ZalithLauncher2). It provides a customized launcher experience and interface improvements for Android.
 
 > **Unofficial Modified Version**
 >
-> RayLauncher is independent and is not affiliated with or endorsed by the original Zalith Launcher developers, Mojang Studios, or Microsoft.
+> Astra Launcher is an independent community project. It is not affiliated with or endorsed by the Zalith Launcher developers, Mojang Studios, or Microsoft.
 
-## Features
+## Project ownership and attribution
 
-- A customized launcher interface.
-- Liquid Glass-inspired visual effects are being developed in the [`feature/liquid-glass` branch](https://github.com/KedaMC/RayLauncher/tree/feature/liquid-glass). Availability may differ between branches and is subject to change.
+AstraDev maintains this fork and its Astra-specific branding and modifications. The project does not claim authorship or ownership of the original RayLauncher, Zalith Launcher 2, or third-party code.
 
-## License and Attribution
+## License and attribution
 
-RayLauncher is based on [Zalith Launcher 2](https://github.com/ZalithLauncher/ZalithLauncher2), which is licensed under GPL-3.0 with additional terms. See the repository's [LICENSE](LICENSE) and the upstream project's license notices for the applicable terms.
+This project contains code derived from [Zalith Launcher 2](https://github.com/ZalithLauncher/ZalithLauncher2) and the RayLauncher modification. Preserve all upstream copyright notices, license texts, and third-party attributions. See [LICENSE](LICENSE) and the relevant upstream notices for applicable terms.
 
-When distributing a modified version, applicable requirements include:
+When redistributing this modified version:
 
-- Keep the original copyright notices and license information.
-- Use a name that clearly distinguishes the modification from the original project.
-- Clearly label the app as an **unofficial modified version** on its startup screen or main interface.
-- Comply with the GPL-3.0 source-code and distribution requirements.
-
-RayLauncher does not claim ownership of the original project's code or third-party components.
+- Keep original copyright and license information.
+- Clearly identify it as an unofficial modified version.
+- Provide the corresponding source code and comply with GPL-3.0 and any applicable additional terms.
 
 ## Disclaimer
 
-Minecraft is a trademark of Microsoft Corporation. RayLauncher is an independent community project and is not affiliated with or endorsed by Mojang Studios or Microsoft.
+Minecraft is a trademark of Microsoft Corporation. Astra Launcher is an independent project and is not affiliated with or endorsed by Mojang Studios or Microsoft.
