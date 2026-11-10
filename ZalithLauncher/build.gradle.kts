@@ -149,11 +149,18 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = if (file("astra_release.jks").isFile) {
-                signingConfigs.getByName("astraRelease")
-            } else {
-                logger.warn("BUILD: astra_release.jks not found, Release is signed with the debugBuild key.")
-                signingConfigs.getByName("debugBuild")
+            signingConfig = when {
+                file("astra_release.jks").isFile -> {
+                    signingConfigs.getByName("astraRelease")
+                }
+                file("zalith_launcher.jks").isFile -> {
+                    logger.lifecycle("BUILD: using the configured release keystore for this Astra build.")
+                    signingConfigs.getByName("releaseBuild")
+                }
+                else -> {
+                    logger.warn("BUILD: no release keystore found; falling back to debugBuild signing.")
+                    signingConfigs.getByName("debugBuild")
+                }
             }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
