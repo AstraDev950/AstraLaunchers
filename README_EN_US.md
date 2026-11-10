@@ -4,7 +4,7 @@
 
 **An unofficial Minecraft: Java Edition launcher modification for Android.**
 
-Astra Launcher is maintained by **AstraDev** and is based on the RayLauncher modification of [Zalith Launcher 2](https://github.com/ZalithLauncher/ZalithLauncher2). It provides a customized launcher experience and interface improvements for Android.
+Astra Launcher is an unofficial Android launcher fork maintained by **AstraDev**, built on [Zalith Launcher 2](https://github.com/ZalithLauncher/ZalithLauncher2) with Astra-specific branding and modifications.
 
 > **Unofficial Modified Version**
 >
@@ -12,11 +12,11 @@ Astra Launcher is maintained by **AstraDev** and is based on the RayLauncher mod
 
 ## Project ownership and attribution
 
-AstraDev maintains this fork and its Astra-specific branding and modifications. The project does not claim authorship or ownership of the original RayLauncher, Zalith Launcher 2, or third-party code.
+AstraDev maintains this fork and its Astra-specific branding and modifications. AstraDev does not claim authorship of upstream launcher code or third-party components.
 
 ## License and attribution
 
-This project contains code derived from [Zalith Launcher 2](https://github.com/ZalithLauncher/ZalithLauncher2) and the RayLauncher modification. Preserve all upstream copyright notices, license texts, and third-party attributions. See [LICENSE](LICENSE) and the relevant upstream notices for applicable terms.
+This project contains code derived from [Zalith Launcher 2](https://github.com/ZalithLauncher/ZalithLauncher2) and other upstream contributions. Original source headers, copyright notices, license texts, and third-party attributions are retained. See [LICENSE](LICENSE) and the relevant upstream notices for applicable terms.
 
 When redistributing this modified version:
 
