@@ -107,6 +107,9 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <action android:name="android.intent.action.SEND"/>
                 <data android:mimeType="application/json"/>
+                <data android:mimeType="application/x-json"/>
+                <data android:mimeType="text/plain"/>
+                <data android:mimeType="application/octet-stream"/>
             </intent-filter>
         </activity-alias>
 
