@@ -20,7 +20,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Foreground only (white glyph on transparent): no black backing shape, so the icon sits directly on the splash background -->
     <item
-        android:drawable="@drawable/ic_launcher_foreground"
+        android:drawable="@drawable/astra_launcher_foreground"
         android:width="220dp"
         android:height="220dp"
         android:gravity="center"/>
