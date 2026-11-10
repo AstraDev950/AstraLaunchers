@@ -21,11 +21,14 @@ package com.movtery.layer_controller.layout
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontStyle
@@ -103,9 +106,19 @@ internal fun TextButton(
 
         val locale = LocalConfiguration.current.locales[0]
 
+        val pressScale by animateFloatAsState(
+            targetValue = if (isPressed) 0.90f else 1f,
+            animationSpec = tween(durationMillis = 75),
+            label = "controllerButtonPressScale"
+        )
+
         Box(
             modifier = Modifier
                 .buttonSize(data, screenSize)
+                .graphicsLayer {
+                    scaleX = pressScale
+                    scaleY = pressScale
+                }
                 .buttonStyle(
                     style = style,
                     isDark = isDark,
