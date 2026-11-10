@@ -25,8 +25,8 @@ val launcherVersionCode = (project.findProperty("launcher_version_code") as? Str
 val launcherVersionName = project.findProperty("launcher_version_name") as? String ?: error("The \"launcher_version_name\" property is not set in gradle.properties.")
 
 val defaultOAuthClientID = project.findProperty("oauth_client_id") as? String
-val defaultStorePassword = project.findProperty("default_store_password") as? String ?: error("The \"default_store_password\" property is not set in gradle.properties.")
-val defaultKeyPassword = project.findProperty("default_key_password") as? String ?: error("The \"default_key_password\" property is not set in gradle.properties.")
+val defaultStorePassword = project.findProperty("default_store_password") as? String ?: System.getenv("STORE_PASSWORD") ?: ""
+val defaultKeyPassword = project.findProperty("default_key_password") as? String ?: System.getenv("KEY_PASSWORD") ?: ""
 val defaultCurseForgeApiKey = project.findProperty("curseforge_api_key") as? String
 
 val projectArch: String = System.getProperty("arch", "all")
@@ -120,12 +120,12 @@ android {
             keyAlias = "movtery_zalith"
             keyPassword = getKeyFromLocal("KEY_PASSWORD", ".key_password.txt")
         }
-        //Ray: key milik sendiri. File dibuat CI dari secret RAY_KEYSTORE_BASE64 (atau taruh manual saat build lokal)
-        create("rayRelease") {
-            storeFile = file("ray_release.jks")
-            storePassword = System.getenv("RAY_STORE_PASSWORD") ?: ""
-            keyAlias = System.getenv("RAY_KEY_ALIAS") ?: "ray"
-            keyPassword = System.getenv("RAY_KEY_PASSWORD") ?: ""
+        // Astra's release key is restored by CI from the configured signing secret.
+        create("astraRelease") {
+            storeFile = file("astra_release.jks")
+            storePassword = System.getenv("ASTRA_STORE_PASSWORD") ?: ""
+            keyAlias = System.getenv("ASTRA_KEY_ALIAS") ?: "astra"
+            keyPassword = System.getenv("ASTRA_KEY_PASSWORD") ?: ""
         }
         // Keep the same signing identity as the previously installed Lite APK.
         create("debugBuild") {
@@ -149,11 +149,10 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            //Ray: pakai key sendiri jika tersedia, kalau tidak ada fallback ke debugBuild agar build tidak gagal
-            signingConfig = if (file("ray_release.jks").isFile) {
-                signingConfigs.getByName("rayRelease")
+            signingConfig = if (file("astra_release.jks").isFile) {
+                signingConfigs.getByName("astraRelease")
             } else {
-                logger.warn("BUILD: ray_release.jks not found, Release is signed with the debugBuild key.")
+                logger.warn("BUILD: astra_release.jks not found, Release is signed with the debugBuild key.")
                 signingConfigs.getByName("debugBuild")
             }
             proguardFiles(
@@ -288,8 +287,8 @@ androidComponents {
                 }
 
                 (output.getFilter(ABI)?.identifier ?: "all").let { abi ->
-                    //Ray: same package for every ABI; the 32-bit build gets a lower versionCode so it can
-                    //never replace an arm64-v8a install on a 64-bit device. arm64-v8a/all keep the base code.
+                    // Use the same package for each ABI. The 32-bit build gets a lower versionCode
+                    // so it cannot replace an arm64-v8a install on a 64-bit device.
                     if (abi == "armeabi-v7a") {
                         output.versionCode.set(launcherVersionCode - 1)
                     }
