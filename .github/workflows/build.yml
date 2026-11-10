@@ -53,10 +53,12 @@ jobs:
       STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
       OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
       CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
-      ASTRA_KEYSTORE_BASE64: ${{ secrets.ASTRA_KEYSTORE_BASE64 }}
-      ASTRA_STORE_PASSWORD: ${{ secrets.ASTRA_STORE_PASSWORD }}
-      ASTRA_KEY_PASSWORD: ${{ secrets.ASTRA_KEY_PASSWORD }}
-      ASTRA_KEY_ALIAS: ${{ secrets.ASTRA_KEY_ALIAS }}
+      # Prefer new Astra secret names; fall back to the existing repository secrets
+      # so current CI signing continues working without requiring secret migration.
+      ASTRA_KEYSTORE_BASE64: ${{ secrets.ASTRA_KEYSTORE_BASE64 || secrets.RAY_KEYSTORE_BASE64 }}
+      ASTRA_STORE_PASSWORD: ${{ secrets.ASTRA_STORE_PASSWORD || secrets.RAY_STORE_PASSWORD }}
+      ASTRA_KEY_PASSWORD: ${{ secrets.ASTRA_KEY_PASSWORD || secrets.RAY_KEY_PASSWORD }}
+      ASTRA_KEY_ALIAS: ${{ secrets.ASTRA_KEY_ALIAS || secrets.RAY_KEY_ALIAS }}
 
     steps:
       - name: Checkout
