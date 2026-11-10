@@ -187,7 +187,7 @@ private fun LoadingScreen(
             ) {
                 Image(
                     modifier = Modifier.size(58.dp),
-                    painter = painterResource(R.drawable.img_launcher),
+                    painter = painterResource(R.drawable.astra_launcher_foreground),
                     contentDescription = stringResource(R.string.generic_loading)
                 )
                 LinearWavyProgressIndicator(
