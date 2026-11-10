@@ -137,7 +137,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.ray.launcher.lite"
+        applicationId = "com.astra.launcher.lite"
         minSdk = 26
         targetSdk = 34
         versionCode = launcherVersionCode
