@@ -305,11 +305,30 @@ internal object MojoLayoutImporter {
             val background = Color(bg)
             val borderColor = Color(border)
             val shape = ButtonShape(radius)
-            val config = ButtonStyle.StyleConfig(
-                alpha, alpha, background, background, Color.White, Color.White,
-                null, null, width, width, borderColor, borderColor, shape, shape
+            // Imported Mojo styles must expose a real pressed state. Keeping the
+            // normal and pressed values identical makes imported buttons look inert.
+            val pressedBackground = background.copy(
+                alpha = (background.alpha + 0.18f).coerceAtMost(1f)
             )
-            ButtonStyle("MJ Style ${styles.size + 1}", id(), false, true, config, config)
+            val pressedBorderWidth = (width + 2).coerceAtMost(50)
+            val pressedShape = ButtonShape((radius + 1.5f).coerceAtMost(100f))
+            val config = ButtonStyle.StyleConfig(
+                alpha = alpha,
+                pressedAlpha = 0.88f,
+                backgroundColor = background,
+                pressedBackgroundColor = pressedBackground,
+                contentColor = Color.White,
+                pressedContentColor = Color.White,
+                fontSize = null,
+                pressedFontSize = null,
+                borderWidth = width,
+                pressedBorderWidth = pressedBorderWidth,
+                borderColor = borderColor,
+                pressedBorderColor = Color.White,
+                borderRadius = shape,
+                pressedBorderRadius = pressedShape
+            )
+            ButtonStyle("MJ Style ${styles.size + 1}", id(), true, true, config, config)
                 .also { styles += it }
         }
     }
