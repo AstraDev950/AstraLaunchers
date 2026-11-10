@@ -21,7 +21,7 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-/** Converts MojoLauncher v3 control JSON files to Ray's native layout model. */
+/** Converts MojoLauncher v3 control JSON files to the launcher's native control layout model. */
 internal object MojoLayoutImporter {
     private const val MAX_JSON_BYTES = 16 * 1024 * 1024
     private const val MAX_MJ_VERSION = 9

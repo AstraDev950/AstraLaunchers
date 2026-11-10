@@ -648,7 +648,12 @@ class MainActivity : BaseAppCompatActivity() {
                 task = {
                     var done = false
                     uris.forEach { uri ->
-                        val inputStream = contentResolver.openInputStream(uri) ?: run {
+                        val inputStream = try {
+                            contentResolver.openInputStream(uri)
+                        } catch (e: Exception) {
+                            showError(message = androidText(e.getMessageOrToString()))
+                            return@forEach
+                        } ?: run {
                             showError(message = androidText(R.string.multirt_runtime_import_failed_input_stream))
                             return@forEach
                         }

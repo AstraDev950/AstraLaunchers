@@ -146,7 +146,7 @@ fun AboutInfoScreen(
                 ButtonIconItem(
                     modifier = modifier,
                     position = position,
-                    icon = painterResource(R.drawable.img_launcher),
+                    icon = painterResource(R.drawable.astra_launcher_foreground),
                     title = BuildKeys.LAUNCHER_NAME,
                     text = stringResource(R.string.about_launcher_version, BuildConfig.VERSION_NAME) + "\n" + stringResource(R.string.launcher_unofficial_notice),
                     //Lite: tombol “Cek pembaruan” dan “Link Project” ditahan sampai fork siap dirilis
@@ -169,14 +169,14 @@ fun AboutInfoScreen(
                     }
                 )
             }
-            //Lite: maintainer fork ini; tombol sponsor dikosongkan dulu
-            row("maintainer_keda", 0, last = true) { modifier, position ->
+            // AstraDev project maintainer.
+            row("maintainer_astradev", 0, last = true) { modifier, position ->
                 ButtonIconItem(
                     modifier = modifier,
                     position = position,
-                    icon = painterResource(R.drawable.img_avatar_keda),
-                    title = "Keda",
-                    text = stringResource(R.string.about_launcher_maintainer_keda_text),
+                    icon = painterResource(R.drawable.astra_launcher_foreground),
+                    title = "AstraDev",
+                    text = stringResource(R.string.about_launcher_maintainer_astradev_text),
                     button = {}
                 )
             }
