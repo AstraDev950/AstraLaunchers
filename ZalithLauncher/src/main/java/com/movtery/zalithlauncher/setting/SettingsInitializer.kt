@@ -22,6 +22,7 @@ import android.content.Context
 import com.movtery.zalithlauncher.utils.device.Architecture
 import com.movtery.zalithlauncher.utils.platform.bytesToMB
 import com.movtery.zalithlauncher.utils.platform.getTotalMemory
+import com.movtery.zalithlauncher.utils.platform.getMaxMemoryForSettings
 import com.movtery.zalithlauncher.utils.string.splitPreservingQuotes
 
 private const val LWJGL_LIB_NAME_ARG = "-Dorg.lwjgl.opengl.libname="
@@ -53,16 +54,27 @@ fun loadAllSettings(context: Context, reloadAll: Boolean = false) {
  * @return The best default value found.
  */
 fun findBestRAMAllocation(context: Context): Int {
-    if (Architecture.is32BitsDevice) return 696
+    val deviceRamMb = getTotalMemory(context).bytesToMB().toInt()
+    return calculateDefaultRAMAllocation(
+        deviceRamMb = deviceRamMb,
+        is32BitDevice = Architecture.is32BitsDevice,
+        maximumRamMb = getMaxMemoryForSettings(context)
+    )
+}
 
-    val deviceRam = getTotalMemory(context).bytesToMB()
-    return when {
-        deviceRam < 1024 -> 296
-        deviceRam < 1536 -> 448
-        deviceRam < 2048 -> 656
-        deviceRam < 3064 -> 936
-        deviceRam < 4096 -> 1144
-        deviceRam < 6144 -> 1536
-        else -> 2048 //Default RAM allocation for 64 bits
-    }
+/**
+ * Choose a conservative game heap from physical RAM while leaving room for Android,
+ * renderer/native allocations and resource-pack textures.
+ */
+internal fun calculateDefaultRAMAllocation(
+    deviceRamMb: Int,
+    is32BitDevice: Boolean,
+    maximumRamMb: Int
+): Int {
+    val safeMaximum = maximumRamMb.coerceAtLeast(256)
+    if (is32BitDevice) return 696.coerceAtMost(safeMaximum)
+
+    val targetRam = (deviceRamMb * 0.45).toInt()
+        .coerceIn(256, safeMaximum)
+    return ((targetRam / 128) * 128).coerceAtLeast(256)
 }
