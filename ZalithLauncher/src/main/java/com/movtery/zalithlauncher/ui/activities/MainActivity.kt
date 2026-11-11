@@ -200,7 +200,7 @@ class MainActivity : BaseAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //处理外部导入
-        handleImportIfNeeded(intent)
+        val isImporting = handleImportIfNeeded(intent)
 
         //加载渲染器
         Renderers.init()
