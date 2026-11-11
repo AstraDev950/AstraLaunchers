@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - feature/liquid-glass-2.8.1
+      - astra/performance-pass-1
   workflow_dispatch:
     inputs:
       ref:
