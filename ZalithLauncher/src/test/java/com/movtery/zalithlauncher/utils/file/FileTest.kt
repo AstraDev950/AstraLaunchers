@@ -28,12 +28,16 @@ class FileTest {
 
     @Test
     fun testCalculateFileSha1() {
-        val file = File("F:\\Download\\geckolib-forge-1.21.8-5.2.2.jar")
-        runBlocking(Dispatchers.IO) {
-            val sha11 = calculateFileSha1(file)
-            println("sha1 1 = $sha11")
-            val sha12 = DigestUtils.digestToString("SHA-1", file.toPath())
-            println("sha1 2 = $sha12")
+        val file = kotlin.io.path.createTempFile("sha1-test", ".jar").toFile()
+        try {
+            file.writeBytes("Astra launcher SHA-1 test fixture".toByteArray())
+            runBlocking(Dispatchers.IO) {
+                val actual = calculateFileSha1(file)
+                val expected = DigestUtils.digestToString("SHA-1", file.toPath())
+                org.junit.Assert.assertEquals(expected, actual)
+            }
+        } finally {
+            file.delete()
         }
     }
 }
