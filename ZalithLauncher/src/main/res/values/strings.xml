@@ -3029,7 +3029,6 @@
     <string name="guide_tip_finish">Tap any blank area to finish the guide</string>
 
     <!-- Astra Launcher branding and upstream feature strings -->
-    <string name="about_launcher_maintainer_keda_text">Maintainer of Astra Launcher</string>
     <string name="account_capes_delete_message">Remove \"%s\" from your cape collection?</string>
     <string name="account_capes_import">Import cape</string>
     <string name="account_capes_import_failed">Failed to import cape: %s</string>
