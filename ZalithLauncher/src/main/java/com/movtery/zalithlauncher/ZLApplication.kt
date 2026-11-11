@@ -90,16 +90,19 @@ class ZLApplication : Application(), SingletonImageLoader.Factory {
         }
 
         super.onCreate()
-        val isMainProcess = isMainProcess()
+        val processName = getCurrentProcessName()
+        val isMainProcess = processName == null || processName == packageName
+        val isFileManagerProcess = processName == "$packageName:filemanager"
         runCatching {
             Fishnet.init(this, PathManager.DIR_NATIVE_LOGS.absolutePath)
 
             MMKV.initialize(this)
-            loadAllSettings(this)
+            // FileManagerActivity loads settings itself when its UI is opened.
+            if (!isFileManagerProcess) loadAllSettings(this)
 
             Logger.initialize(this)
 
-            initializeData(isMainProcess)
+            initializeData(isMainProcess, isFileManagerProcess)
             PathManager.DIR_FILES_PRIVATE = getDir("files", MODE_PRIVATE)
             DEVICE_ARCHITECTURE = Architecture.getDeviceArchitecture()
             //Force x86 lib directory for Asus x86 based zenfones
@@ -152,8 +155,8 @@ class ZLApplication : Application(), SingletonImageLoader.Factory {
      * Account data belongs to the launcher UI process. Secondary game, JVM and
      * file-manager processes do not need their own Room account database instance.
      */
-    private fun isMainProcess(): Boolean {
-        val processName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+    private fun getCurrentProcessName(): String? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             Application.getProcessName()
         } else {
             getSystemService(ActivityManager::class.java)
@@ -161,13 +164,15 @@ class ZLApplication : Application(), SingletonImageLoader.Factory {
                 ?.firstOrNull { it.pid == Process.myPid() }
                 ?.processName
         }
-        return processName == null || processName == packageName
     }
 
-    private fun initializeData(isMainProcess: Boolean) {
+    private fun initializeData(isMainProcess: Boolean, isFileManagerProcess: Boolean) {
         if (isMainProcess) {
             AccountsManager.initialize(this)
         }
-        GamePathManager.initialize(this)
+        // The file manager has its own storage/config layer and never accesses game-path Room data.
+        if (!isFileManagerProcess) {
+            GamePathManager.initialize(this)
+        }
     }
 }
