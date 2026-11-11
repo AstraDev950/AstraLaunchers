@@ -83,7 +83,9 @@ jobs:
           add-job-summary: "on-failure"
 
       - name: Run launcher unit tests
-        run: ./gradlew :ZalithLauncher:testDebugUnitTest
+        run: |
+          chmod +x gradlew
+          ./gradlew :ZalithLauncher:testDebugUnitTest
 
       - name: Validate Astra signing configuration
         shell: bash
