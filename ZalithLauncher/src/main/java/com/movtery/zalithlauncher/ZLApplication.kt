@@ -90,7 +90,7 @@ class ZLApplication : Application(), SingletonImageLoader.Factory {
         }
 
         super.onCreate()
-        val isJvmServiceProcess = isJvmServiceProcess()
+        val isMainProcess = isMainProcess()
         runCatching {
             Fishnet.init(this, PathManager.DIR_NATIVE_LOGS.absolutePath)
 
@@ -99,7 +99,7 @@ class ZLApplication : Application(), SingletonImageLoader.Factory {
 
             Logger.initialize(this)
 
-            initializeData(isJvmServiceProcess)
+            initializeData(isMainProcess)
             PathManager.DIR_FILES_PRIVATE = getDir("files", MODE_PRIVATE)
             DEVICE_ARCHITECTURE = Architecture.getDeviceArchitecture()
             //Force x86 lib directory for Asus x86 based zenfones
@@ -149,10 +149,10 @@ class ZLApplication : Application(), SingletonImageLoader.Factory {
     }
 
     /**
-     * The JVM service runs in its own process and does not access the account database.
-     * Avoid opening a second Room database instance next to the game runtime.
+     * Account data belongs to the launcher UI process. Secondary game, JVM and
+     * file-manager processes do not need their own Room account database instance.
      */
-    private fun isJvmServiceProcess(): Boolean {
+    private fun isMainProcess(): Boolean {
         val processName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             Application.getProcessName()
         } else {
@@ -161,11 +161,11 @@ class ZLApplication : Application(), SingletonImageLoader.Factory {
                 ?.firstOrNull { it.pid == Process.myPid() }
                 ?.processName
         }
-        return processName == "$packageName:jvm"
+        return processName == null || processName == packageName
     }
 
-    private fun initializeData(isJvmServiceProcess: Boolean) {
-        if (!isJvmServiceProcess) {
+    private fun initializeData(isMainProcess: Boolean) {
+        if (isMainProcess) {
             AccountsManager.initialize(this)
         }
         GamePathManager.initialize(this)
