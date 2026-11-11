@@ -62,6 +62,8 @@ sealed interface FileManagerInitResult {
 @AndroidEntryPoint
 class FileManagerActivity : ComponentActivity() {
     private var initResult by mutableStateOf<FileManagerInitResult>(FileManagerInitResult.Pending)
+    /** Avoid loading the same settings twice during the initial Activity startup. */
+    private var skipInitialResumeSettingsReload = false
 
     /** Intent 中的可访问范围目录（仅字符串，作用域校验交给 ViewModel 初始化） */
     private var rootPathStr: String? = null
@@ -85,6 +87,7 @@ class FileManagerActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         loadAllSettings(this, true)
+        skipInitialResumeSettingsReload = true
         initializeFromIntent()
 
         setContent {
@@ -140,7 +143,11 @@ class FileManagerActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        loadAllSettings(this, true)
+        if (skipInitialResumeSettingsReload) {
+            skipInitialResumeSettingsReload = false
+        } else {
+            loadAllSettings(this, true)
+        }
         applySystemUiByOrientation()
         @Suppress("DEPRECATION")
         setTaskDescription(
