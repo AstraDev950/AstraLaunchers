@@ -11,15 +11,17 @@ permissions:
 jobs:
   Build:
     uses: ./.github/workflows/build.yml
+    with:
+      ref: ${{ github.event.release.tag_name }}
     secrets:
       KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
       OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
       CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
-      ASTRA_KEYSTORE_BASE64: ${{ secrets.RAY_KEYSTORE_BASE64 }}
-      ASTRA_STORE_PASSWORD: ${{ secrets.RAY_STORE_PASSWORD }}
-      ASTRA_KEY_PASSWORD: ${{ secrets.RAY_KEY_PASSWORD }}
-      ASTRA_KEY_ALIAS: ${{ secrets.RAY_KEY_ALIAS }}
+      ASTRA_KEYSTORE_BASE64: ${{ secrets.ASTRA_KEYSTORE_BASE64 }}
+      ASTRA_STORE_PASSWORD: ${{ secrets.ASTRA_STORE_PASSWORD }}
+      ASTRA_KEY_PASSWORD: ${{ secrets.ASTRA_KEY_PASSWORD }}
+      ASTRA_KEY_ALIAS: ${{ secrets.ASTRA_KEY_ALIAS }}
 
   Upload-to-Release:
     needs: Build
