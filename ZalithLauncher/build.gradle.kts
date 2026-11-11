@@ -150,17 +150,11 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             signingConfig = when {
-                file("astra_release.jks").isFile -> {
-                    signingConfigs.getByName("astraRelease")
-                }
-                file("astra_release.jks").isFile -> {
-                    signingConfigs.getByName("astraRelease")
-                }
                 else -> {
-                    // CI may not have release-signing secrets configured yet.
-                    // Use Android's generated debug key so alpha APKs remain installable.
-                    logger.warn("BUILD: Astra release keystore unavailable; using the standard Android debug signing key for this build.")
-                    signingConfigs.getByName("debug")
+                    // Keep a stable signing identity for Astra alpha updates when the
+                    // private Astra release keystore is not configured in CI.
+                    logger.warn("BUILD: Astra release keystore unavailable; using the committed Astra-compatible debugBuild key.")
+                    signingConfigs.getByName("debugBuild")
                 }
             }
             proguardFiles(
