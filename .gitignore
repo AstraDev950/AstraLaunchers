@@ -33,3 +33,6 @@ LWJGL/*/build/
 
 .vscode/
 
+
+# Private Astra release signing keystore (never commit)
+ZalithLauncher/astra_release.jks
