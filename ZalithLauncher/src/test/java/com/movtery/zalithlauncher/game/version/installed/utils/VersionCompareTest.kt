@@ -46,8 +46,8 @@ class VersionCompareTest {
 
     @Test
     fun testCompareNewSnapshots() {
-        assertTrue("25.4-snapshot-2".isBiggerVer("25.4"))
-        assertTrue("25.4-snapshot-1".isLowerVer("25.4"))
+        assertTrue("26.1-snapshot-2".isBiggerVer("26.1-snapshot-1"))
+        assertTrue("26.1-snapshot-1".isLowerVer("26.1"))
     }
 
 
