@@ -149,8 +149,12 @@ fun AboutInfoScreen(
                     icon = painterResource(R.drawable.astra_launcher_foreground),
                     title = BuildKeys.LAUNCHER_NAME,
                     text = stringResource(R.string.about_launcher_version, BuildConfig.VERSION_NAME) + "\n" + stringResource(R.string.launcher_unofficial_notice),
-                    //Lite: tombol “Cek pembaruan” dan “Link Project” ditahan sampai fork siap dirilis
-                    button = {}
+                    //Use Astra's GitHub update feed from the About screen.
+                    button = {
+                        ScalingActionButton(onClick = checkUpdate) {
+                            Text(text = stringResource(R.string.upgrade_title))
+                        }
+                    }
                 )
             }
             row("author_movtery", 0) { modifier, position ->
