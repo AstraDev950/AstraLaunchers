@@ -3028,8 +3028,8 @@
     <!-- Next-step hint shown near a screen corner during the final guide step; tapping any blank area finishes the whole guide -->
     <string name="guide_tip_finish">Tap any blank area to finish the guide</string>
 
-    <!-- Ray Launcher strings (restored after upstream 2.8.1 merge) -->
-    <string name="about_launcher_maintainer_keda_text">Maintainer of RayLauncher</string>
+    <!-- Astra Launcher branding and upstream feature strings -->
+    <string name="about_launcher_maintainer_keda_text">Maintainer of Astra Launcher</string>
     <string name="account_capes_delete_message">Remove \"%s\" from your cape collection?</string>
     <string name="account_capes_import">Import cape</string>
     <string name="account_capes_import_failed">Failed to import cape: %s</string>
@@ -3051,7 +3051,7 @@
     <string name="game_menu_recorder_stopped">Recording stopped, saving video…</string>
     <string name="glass_tier_full">Full</string>
     <string name="glass_tier_lite">Lite</string>
-    <string name="launcher_unofficial_notice">RayLauncher (Unofficial Modified Version)</string>
+    <string name="launcher_unofficial_notice">Astra Launcher (Unofficial Modified Version)</string>
     <string name="recorder_notification_channel_name">Game recorder</string>
     <string name="recorder_notification_text">Recording game video and sound</string>
     <string name="recorder_notification_title">Recording game</string>
