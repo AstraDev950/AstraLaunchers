@@ -18,16 +18,81 @@
 
 package com.movtery.zalithlauncher.game.version.resource_pack
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import com.movtery.zalithlauncher.game.version.mod.meta.PackMcMeta
 import com.movtery.zalithlauncher.utils.GSON
 import com.movtery.zalithlauncher.utils.logging.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.apache.commons.io.FileUtils
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.InputStream
 import java.util.zip.ZipFile
 
 private const val TAG = "ResourcePackUtils"
+private const val MAX_PACK_ICON_BYTES = 4 * 1024 * 1024
+private const val MAX_PACK_ICON_SOURCE_DIMENSION = 8192
+private const val PACK_ICON_PREVIEW_DIMENSION = 128
+
+/**
+ * Resource-pack icons are launcher previews only. Keep a small thumbnail in memory
+ * instead of retaining potentially huge source PNGs for every installed pack.
+ */
+private fun readPackIcon(input: InputStream): ByteArray? = runCatching {
+    val source = ByteArrayOutputStream()
+    val buffer = ByteArray(8192)
+    var totalBytes = 0
+
+    while (true) {
+        val count = input.read(buffer)
+        if (count < 0) break
+        totalBytes += count
+        if (totalBytes > MAX_PACK_ICON_BYTES) return@runCatching null
+        source.write(buffer, 0, count)
+    }
+
+    val sourceBytes = source.toByteArray()
+    if (sourceBytes.isEmpty()) return@runCatching null
+
+    val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+    BitmapFactory.decodeByteArray(sourceBytes, 0, sourceBytes.size, bounds)
+    val sourceWidth = bounds.outWidth
+    val sourceHeight = bounds.outHeight
+    if (sourceWidth <= 0 || sourceHeight <= 0 ||
+        sourceWidth > MAX_PACK_ICON_SOURCE_DIMENSION ||
+        sourceHeight > MAX_PACK_ICON_SOURCE_DIMENSION
+    ) {
+        return@runCatching null
+    }
+
+    var sampleSize = 1
+    while (maxOf(sourceWidth, sourceHeight) / sampleSize > PACK_ICON_PREVIEW_DIMENSION) {
+        sampleSize *= 2
+    }
+
+    val options = BitmapFactory.Options().apply {
+        inSampleSize = sampleSize
+        inPreferredConfig = Bitmap.Config.ARGB_8888
+    }
+    val bitmap = BitmapFactory.decodeByteArray(sourceBytes, 0, sourceBytes.size, options)
+        ?: return@runCatching null
+
+    try {
+        ByteArrayOutputStream().use { output ->
+            if (bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)) {
+                output.toByteArray()
+            } else {
+                null
+            }
+        }
+    } finally {
+        bitmap.recycle()
+    }
+}.onFailure {
+    Logger.warning(TAG, "Failed to create a resource-pack icon preview", it)
+}.getOrNull()
 
 /**
  * 解析资源包文件，游戏内仅支持加载文件夹、文件后缀为zip的资源包
@@ -46,8 +111,8 @@ suspend fun parseResourcePack(file: File): ResourcePackInfo? = withContext(Dispa
                 metaContent = metaFile.readText()
             }
             //尝试读取资源包的图标
-            File(file, "pack.png").takeIf { it.exists() }?.let { iconFile ->
-                iconBytes = iconFile.readBytes()
+            File(file, "pack.png").takeIf { it.isFile }?.let { iconFile ->
+                iconFile.inputStream().use { input -> iconBytes = readPackIcon(input) }
             }
         } else if (file.extension == "zip") { //压缩包形式的资源包
             //性能、速度考虑，仅压缩包形式的资源包可以计算文件大小
@@ -60,7 +125,9 @@ suspend fun parseResourcePack(file: File): ResourcePackInfo? = withContext(Dispa
                 }
                 //尝试读取资源包的图标
                 zip.getEntry("pack.png")?.let { iconEntry ->
-                    iconBytes = zip.getInputStream(iconEntry).readBytes()
+                    zip.getInputStream(iconEntry).use { input ->
+                        iconBytes = readPackIcon(input)
+                    }
                 }
             }
         }
