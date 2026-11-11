@@ -208,6 +208,12 @@ class MainActivity : BaseAppCompatActivity() {
         PluginLoader.loadAllPlugins(this, false)
         refreshData()
 
+        //Check the Astra update feed at most once per hour.
+        //The update dialog is only shown when a newer version is published.
+        if (!isImporting) {
+            launcherUpgradeViewModel.checkOnAppStart()
+        }
+
         //注册文件管理器事件监听
         fmEventRegistrar = FileManagerEventRegistrar(this, ::onFileManagerEvent).also { it.start() }
 
