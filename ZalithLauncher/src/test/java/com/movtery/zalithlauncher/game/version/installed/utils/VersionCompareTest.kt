@@ -33,8 +33,8 @@ class VersionCompareTest {
 
     @Test
     fun testCompareLegacySnapshots() {
-        assertTrue("20w14b".isBiggerVer("someRelease"))
-        assertTrue("20w14a".isLowerVer("someRelease"))
+        assertTrue("20w14b".isBiggerVer("1.15.2"))
+        assertTrue("20w14a".isLowerVer("1.16"))
     }
 
     @Test
