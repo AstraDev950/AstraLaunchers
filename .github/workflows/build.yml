@@ -83,6 +83,7 @@ jobs:
           add-job-summary: "on-failure"
 
       - name: Run launcher unit tests
+        if: matrix.arch == 'arm64'
         run: |
           chmod +x gradlew
           ./gradlew :ZalithLauncher:testDebugUnitTest
