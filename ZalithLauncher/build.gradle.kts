@@ -25,8 +25,6 @@ val launcherVersionCode = (project.findProperty("launcher_version_code") as? Str
 val launcherVersionName = project.findProperty("launcher_version_name") as? String ?: error("The \"launcher_version_name\" property is not set in gradle.properties.")
 
 val defaultOAuthClientID = project.findProperty("oauth_client_id") as? String
-val defaultStorePassword = project.findProperty("default_store_password") as? String ?: System.getenv("STORE_PASSWORD") ?: ""
-val defaultKeyPassword = project.findProperty("default_key_password") as? String ?: System.getenv("KEY_PASSWORD") ?: ""
 val defaultCurseForgeApiKey = project.findProperty("curseforge_api_key") as? String
 
 val projectArch: String = System.getProperty("arch", "all")
@@ -120,19 +118,12 @@ android {
             keyAlias = "movtery_zalith"
             keyPassword = getKeyFromLocal("KEY_PASSWORD", ".key_password.txt")
         }
-        // Astra's release key is restored by CI from the configured signing secret.
+        // Astra release builds must use the dedicated Astra keystore restored by CI.
         create("astraRelease") {
             storeFile = file("astra_release.jks")
             storePassword = System.getenv("ASTRA_STORE_PASSWORD") ?: ""
             keyAlias = System.getenv("ASTRA_KEY_ALIAS") ?: "astra"
             keyPassword = System.getenv("ASTRA_KEY_PASSWORD") ?: ""
-        }
-        // Keep the same signing identity as the previously installed Lite APK.
-        create("debugBuild") {
-            storeFile = file("zalith_launcher_debug.jks")
-            storePassword = defaultStorePassword
-            keyAlias = "movtery_zalith_debug"
-            keyPassword = defaultKeyPassword
         }
     }
 
@@ -149,14 +140,7 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = when {
-                else -> {
-                    // Keep a stable signing identity for Astra alpha updates when the
-                    // private Astra release keystore is not configured in CI.
-                    logger.warn("BUILD: Astra release keystore unavailable; using the committed Astra-compatible debugBuild key.")
-                    signingConfigs.getByName("debugBuild")
-                }
-            }
+            signingConfig = signingConfigs.getByName("astraRelease")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
