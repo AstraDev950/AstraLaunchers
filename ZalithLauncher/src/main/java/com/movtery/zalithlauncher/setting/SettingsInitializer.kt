@@ -21,8 +21,8 @@ package com.movtery.zalithlauncher.setting
 import android.content.Context
 import com.movtery.zalithlauncher.utils.device.Architecture
 import com.movtery.zalithlauncher.utils.platform.bytesToMB
-import com.movtery.zalithlauncher.utils.platform.getTotalMemory
 import com.movtery.zalithlauncher.utils.platform.getMaxMemoryForSettings
+import com.movtery.zalithlauncher.utils.platform.getTotalMemory
 import com.movtery.zalithlauncher.utils.string.splitPreservingQuotes
 
 private const val LWJGL_LIB_NAME_ARG = "-Dorg.lwjgl.opengl.libname="
