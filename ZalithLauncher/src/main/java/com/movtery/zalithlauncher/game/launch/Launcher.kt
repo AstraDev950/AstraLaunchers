@@ -339,10 +339,13 @@ abstract class Launcher(
         // Overridden by us to specify the exact number of cores that the android system has
         args.purgeArg("-XX:ActiveProcessorCount")
 
-        //Add automatically generated args
-        val ramAllocationString = ramAllocation.toString()
-        args.add("-Xms${ramAllocationString}M")
-        args.add("-Xmx${ramAllocationString}M")
+        // Start with a smaller committed heap. The JVM can grow toward Xmx when
+        // mods and resource-pack data need more memory, reducing launch-time pressure.
+        val initialRamAllocation = (ramAllocation / 4)
+            .coerceIn(256, 512)
+            .coerceAtMost(ramAllocation)
+        args.add("-Xms${initialRamAllocation}M")
+        args.add("-Xmx${ramAllocation}M")
 
         args.add("-Dorg.lwjgl.openal.libname=${PathManager.DIR_NATIVE_LIB}/libopenal.so")
 
