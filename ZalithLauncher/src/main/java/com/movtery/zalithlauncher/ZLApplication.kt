@@ -18,8 +18,10 @@
 
 package com.movtery.zalithlauncher
 
+import android.app.ActivityManager
 import android.app.Application
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Process
 import android.util.Log
 import coil3.ImageLoader
@@ -88,6 +90,7 @@ class ZLApplication : Application(), SingletonImageLoader.Factory {
         }
 
         super.onCreate()
+        val isJvmServiceProcess = isJvmServiceProcess()
         runCatching {
             Fishnet.init(this, PathManager.DIR_NATIVE_LOGS.absolutePath)
 
@@ -96,7 +99,7 @@ class ZLApplication : Application(), SingletonImageLoader.Factory {
 
             Logger.initialize(this)
 
-            initializeData()
+            initializeData(isJvmServiceProcess)
             PathManager.DIR_FILES_PRIVATE = getDir("files", MODE_PRIVATE)
             DEVICE_ARCHITECTURE = Architecture.getDeviceArchitecture()
             //Force x86 lib directory for Asus x86 based zenfones
@@ -145,8 +148,26 @@ class ZLApplication : Application(), SingletonImageLoader.Factory {
             .build()
     }
 
-    private fun initializeData() {
-        AccountsManager.initialize(this)
+    /**
+     * The JVM service runs in its own process and does not access the account database.
+     * Avoid opening a second Room database instance next to the game runtime.
+     */
+    private fun isJvmServiceProcess(): Boolean {
+        val processName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            Application.getProcessName()
+        } else {
+            getSystemService(ActivityManager::class.java)
+                ?.runningAppProcesses
+                ?.firstOrNull { it.pid == Process.myPid() }
+                ?.processName
+        }
+        return processName == "$packageName:jvm"
+    }
+
+    private fun initializeData(isJvmServiceProcess: Boolean) {
+        if (!isJvmServiceProcess) {
+            AccountsManager.initialize(this)
+        }
         GamePathManager.initialize(this)
     }
 }
