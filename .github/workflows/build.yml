@@ -53,12 +53,10 @@ jobs:
       STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
       OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
       CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
-      # Prefer new Astra secret names; fall back to the existing repository secrets
-      # so current CI signing continues working without requiring secret migration.
-      ASTRA_KEYSTORE_BASE64: ${{ secrets.ASTRA_KEYSTORE_BASE64 || secrets.RAY_KEYSTORE_BASE64 }}
-      ASTRA_STORE_PASSWORD: ${{ secrets.ASTRA_STORE_PASSWORD || secrets.RAY_STORE_PASSWORD }}
-      ASTRA_KEY_PASSWORD: ${{ secrets.ASTRA_KEY_PASSWORD || secrets.RAY_KEY_PASSWORD }}
-      ASTRA_KEY_ALIAS: ${{ secrets.ASTRA_KEY_ALIAS || secrets.RAY_KEY_ALIAS }}
+      ASTRA_KEYSTORE_BASE64: ${{ secrets.ASTRA_KEYSTORE_BASE64 }}
+      ASTRA_STORE_PASSWORD: ${{ secrets.ASTRA_STORE_PASSWORD }}
+      ASTRA_KEY_PASSWORD: ${{ secrets.ASTRA_KEY_PASSWORD }}
+      ASTRA_KEY_ALIAS: ${{ secrets.ASTRA_KEY_ALIAS }}
 
     steps:
       - name: Checkout
@@ -78,9 +76,23 @@ jobs:
         with:
           add-job-summary: "on-failure"
 
-      - name: Restore Astra signing key
-        if: env.ASTRA_KEYSTORE_BASE64 != ''
-        run: echo "$ASTRA_KEYSTORE_BASE64" | base64 -d > ZalithLauncher/astra_release.jks
+      - name: Validate Astra signing configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in ASTRA_KEYSTORE_BASE64 ASTRA_STORE_PASSWORD ASTRA_KEY_PASSWORD ASTRA_KEY_ALIAS; do
+            if [[ -z "${!name:-}" ]]; then
+              echo "::error::Missing GitHub Actions secret: $name"
+              exit 1
+            fi
+          done
+          printf '%s' "$ASTRA_KEYSTORE_BASE64" | base64 --decode > ZalithLauncher/astra_release.jks
+          test -s ZalithLauncher/astra_release.jks
+          keytool -list -keystore ZalithLauncher/astra_release.jks \
+            -storepass "$ASTRA_STORE_PASSWORD" -alias "$ASTRA_KEY_ALIAS" >/dev/null
+          echo "Astra keystore and alias are valid."
+
+
 
       - name: Build APK for ${{ matrix.abi }}
         run: |
