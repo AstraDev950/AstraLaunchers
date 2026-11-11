@@ -473,6 +473,7 @@
     <string name="account_logging_in_failed">登录失败</string>
     <string name="account_logging_in_saving">获取玩家皮肤、保存账号信息</string>
     <string name="account_logging_time_out">网络访问超时，请检查网络环境。</string>
+    <string name="account_microsoft_oauth_not_configured">此 Astra 版本尚未配置 Microsoft 登录。维护者需要设置 OAUTH_CLIENT_ID 并重新构建启动器。</string>
     <string name="account_logging_xbox_banned">您的账号因违反 Xbox 社区规范已被封禁，无法使用！</string>
     <string name="account_logging_xbox_restricted">您的账号目前受到限制，监护人尚未授权您进行在线游戏。</string>
     <string name="account_logging_xbox_unregistered">您的账号尚未创建 Xbox 个人资料，请前往 https://signup.live.com/signup 注册。</string>
@@ -1330,7 +1331,7 @@
     <string name="about_launcher_title">关于启动器</string>
     <string name="about_launcher_version">启动器版本：%s</string>
     <string name="about_launcher_author_movtery_title">墨北Mov</string>
-    <string name="about_launcher_author_movtery_text">%s 的作者</string>
+    <string name="about_launcher_author_movtery_text">Zalith Launcher 2 的原作者。此处保留署名，以标明 Astra Launcher 使用的上游代码。</string>
     <string name="about_launcher_project_link">项目地址</string>
     <string name="about_sponsor">赞助支持</string>
     <string name="about_sponsors_title">启动器赞助者</string>

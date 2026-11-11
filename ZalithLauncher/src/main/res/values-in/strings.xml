@@ -292,6 +292,7 @@
     <string name="account_logging_in_failed">Gagal Login</string>
     <string name="account_logging_in_saving">Dapatkan skin dan simpan info akun</string>
     <string name="account_logging_time_out">Waktu jaringan habis. Periksa koneksi internet mu.</string>
+    <string name="account_microsoft_oauth_not_configured">Login Microsoft belum dikonfigurasi pada build Astra ini. Pengelola launcher harus mengatur OAUTH_CLIENT_ID lalu membuat ulang APK.</string>
     <string name="account_logging_xbox_banned">Akunmu telah diblokir karena melanggar Standar Komunitas Xbox dan tidak dapat digunakan lagi!</string>
     <string name="account_logging_xbox_restricted">Akunmu dibatasi. Orang tuamu tidak mengizinkanmu bermain game online.</string>
     <string name="account_logging_xbox_unregistered">Akunmu belum membuat profil Xbox. Silakan kunjungi https://signup.live.com/signup untuk mendaftar.</string>
@@ -708,7 +709,7 @@
     <string name="about_launcher_title">Tentang Launcher</string>
     <string name="about_launcher_version">Versi Launcher: %s</string>
     <string name="about_launcher_author_movtery_title">MovTery</string>
-    <string name="about_launcher_author_movtery_text">Pembuat Zalith Launcher</string>
+    <string name="about_launcher_author_movtery_text">Pengembang asli Zalith Launcher 2. Kredit ini untuk kode sumber upstream yang digunakan Astra Launcher.</string>
     <string name="about_launcher_fazry_text">Random Kid</string>
     <string name="about_launcher_project_link">Link Project</string>
     <string name="about_sponsor">Dukung Dengan Sponsor</string>

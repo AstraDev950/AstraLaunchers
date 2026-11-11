@@ -33,6 +33,7 @@ import com.movtery.zalithlauncher.game.account.auth_server.getAuthServeInfo
 import com.movtery.zalithlauncher.game.account.microsoft.AsyncStatus
 import com.movtery.zalithlauncher.game.account.microsoft.AuthType
 import com.movtery.zalithlauncher.game.account.microsoft.MinecraftProfileException
+import com.movtery.zalithlauncher.game.account.microsoft.MicrosoftOAuthNotConfiguredException
 import com.movtery.zalithlauncher.game.account.microsoft.NotPurchasedMinecraftException
 import com.movtery.zalithlauncher.game.account.microsoft.XboxLoginException
 import com.movtery.zalithlauncher.game.account.microsoft.fetchDeviceCodeResponse
@@ -179,6 +180,7 @@ fun microsoftLogin(
             }
             when (th) {
                 is HttpRequestTimeoutException -> androidText(R.string.account_logging_time_out)
+                is MicrosoftOAuthNotConfiguredException -> androidText(R.string.account_microsoft_oauth_not_configured)
                 is NotPurchasedMinecraftException -> toLocal()
                 is MinecraftProfileException -> th.toLocal()
                 is XboxLoginException -> th.toLocal()

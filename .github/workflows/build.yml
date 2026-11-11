@@ -46,6 +46,7 @@ jobs:
   test:
     name: Run launcher unit tests
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -72,6 +73,7 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     strategy:
       matrix:
         include:
@@ -126,6 +128,21 @@ jobs:
           echo "Astra keystore and alias are valid."
 
 
+
+      - name: Validate Microsoft OAuth configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          CLIENT_ID="$(printf '%s' "${OAUTH_CLIENT_ID:-}" | tr -d '[:space:]')"
+          if [[ -z "$CLIENT_ID" ]]; then
+            echo "::error::Missing GitHub Actions secret OAUTH_CLIENT_ID. Configure a Microsoft Entra public-client app with device-code flow and personal Microsoft account support, then add its Application (client) ID as OAUTH_CLIENT_ID."
+            exit 1
+          fi
+          if [[ ! "$CLIENT_ID" =~ ^[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}$ ]]; then
+            echo "::error::OAUTH_CLIENT_ID must be a Microsoft Entra Application (client) ID in GUID format."
+            exit 1
+          fi
+          echo "Microsoft OAuth configuration is present."
 
       - name: Build APK for ${{ matrix.abi }}
         run: |

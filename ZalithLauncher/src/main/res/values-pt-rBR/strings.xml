@@ -381,6 +381,7 @@
     <string name="account_logging_in_failed">Falha no Login</string>
     <string name="account_logging_in_saving">Buscando informações de skin e salvando a conta</string>
     <string name="account_logging_time_out">Tempo limite de rede. Verifique sua conexão.</string>
+    <string name="account_microsoft_oauth_not_configured">O login da Microsoft não está configurado nesta compilação do Astra. O responsável deve definir OAUTH_CLIENT_ID e gerar o aplicativo novamente.</string>
     <string name="account_logging_xbox_banned">Sua conta foi banida por violar os Padrões da Comunidade Xbox e não pode mais ser usada!</string>
     <string name="account_logging_xbox_restricted">Sua conta está atualmente restrita. Um responsável não autorizou você a jogar jogos online.</string>
     <string name="account_logging_xbox_unregistered">Sua conta ainda não criou um perfil do Xbox. Acesse https://signup.live.com/signup para se registrar.</string>
@@ -988,7 +989,7 @@
     <string name="about_launcher_title">Sobre o Launcher</string>
     <string name="about_launcher_version">Versão do Launcher: %s</string>
     <string name="about_launcher_author_movtery_title">MovTery</string>
-    <string name="about_launcher_author_movtery_text">Autor de %s</string>
+    <string name="about_launcher_author_movtery_text">Autor original do Zalith Launcher 2. Este crédito se refere ao código upstream usado pelo Astra Launcher.</string>
     <string name="about_launcher_project_link">Link do Projeto</string>
     <string name="about_sponsor">Apoio de patrocínio</string>
     <string name="about_acknowledgements_title">Agradecimentos</string>

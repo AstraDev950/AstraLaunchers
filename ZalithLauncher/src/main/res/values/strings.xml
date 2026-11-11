@@ -862,6 +862,7 @@
     <string name="account_logging_in_saving">Fetching skin and saving account info</string>
     <!-- Error message in the login failed dialog when the connection times out -->
     <string name="account_logging_time_out">Network timeout. Check your connection.</string>
+    <string name="account_microsoft_oauth_not_configured">Microsoft sign-in is not configured in this Astra build. The maintainer must set OAUTH_CLIENT_ID and rebuild the launcher.</string>
     <!-- Error message in the login failed dialog when the Xbox account is banned -->
     <string name="account_logging_xbox_banned">Your account has been banned for violating the Xbox Community Standards and can no longer be used!</string>
     <!-- Error message in the login failed dialog when a guardian has not authorized online play -->
@@ -2561,7 +2562,7 @@
     <!-- Name of the launcher author shown as an item title on the About page -->
     <string name="about_launcher_author_movtery_title">MovTery</string>
     <!-- Description under the author name on the About page; %s is the launcher name -->
-    <string name="about_launcher_author_movtery_text">Author of %s</string>
+    <string name="about_launcher_author_movtery_text">Original author of Zalith Launcher 2. This credit is for upstream code used in Astra Launcher.</string>
     <string name="about_launcher_fazry_text">Random Kid</string>
     <!-- Button on the About page opening the project website -->
     <string name="about_launcher_project_link">Project Link</string>

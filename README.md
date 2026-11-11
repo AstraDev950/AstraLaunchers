@@ -14,6 +14,10 @@ Astra Launcher is an unofficial Android launcher fork maintained by **AstraDev**
 
 AstraDev maintains this fork and its Astra-specific branding and modifications. AstraDev does not claim authorship of upstream launcher code or third-party components.
 
+## Microsoft sign-in build configuration
+
+Microsoft account sign-in uses the device-code flow and requires a Microsoft Entra application (client) ID. Release builds must provide it as the `OAUTH_CLIENT_ID` environment variable or in `ZalithLauncher/.oauth_client_id.txt`. Configure the app registration for public-client/device-code sign-in and personal Microsoft accounts. The application ID is public configuration; never commit account passwords, access tokens, refresh tokens, or client secrets.
+
 ## License and attribution
 
 This project contains code derived from [Zalith Launcher 2](https://github.com/ZalithLauncher/ZalithLauncher2) and other upstream contributions. Original source headers, copyright notices, license texts, and third-party attributions are retained. See [LICENSE](LICENSE) and the relevant upstream notices for applicable terms.

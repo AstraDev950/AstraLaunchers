@@ -92,6 +92,23 @@ private const val TENANT = "/consumers"
  */
 private const val MAX_CONSECUTIVE_POLL_FAILURES = 5
 
+/**
+ * Raised before contacting Microsoft when this build has no registered public OAuth client ID.
+ */
+class MicrosoftOAuthNotConfiguredException : IllegalStateException()
+
+/**
+ * Validates and normalizes the Microsoft Entra application (client) ID supplied at build time.
+ * Kept pure so the missing/whitespace configuration case can be unit-tested without network access.
+ */
+internal fun requireMicrosoftOAuthClientId(configuredId: String): String {
+    return configuredId.trim().takeIf { it.isNotEmpty() }
+        ?: throw MicrosoftOAuthNotConfiguredException()
+}
+
+private fun microsoftOAuthClientId(): String =
+    requireMicrosoftOAuthClientId(BuildKeys.OAUTH_CLIENT_ID)
+
 const val MICROSOFT_AUTH_URL = "https://login.microsoftonline.com"
 const val LIVE_AUTH_URL = "https://login.live.com"
 const val XBL_AUTH_URL = "https://user.auth.xboxlive.com"
@@ -107,7 +124,7 @@ suspend fun fetchDeviceCodeResponse(context: CoroutineContext): DeviceCodeRespon
         submitForm(
             url = "$MICROSOFT_AUTH_URL$TENANT/oauth2/v2.0/devicecode",
             parameters = Parameters.build {
-                append("client_id", BuildKeys.OAUTH_CLIENT_ID)
+                append("client_id", microsoftOAuthClientId())
                 append("scope", SCOPES.joinToString(" "))
             },
             context = context
@@ -149,7 +166,7 @@ suspend fun getTokenResponse(
                     formParameters = Parameters.build {
                         append("grant_type", "urn:ietf:params:oauth:grant-type:device_code")
                         append("device_code", codeResponse.deviceCode)
-                        append("client_id", BuildKeys.OAUTH_CLIENT_ID)
+                        append("client_id", microsoftOAuthClientId())
                         append("tenant", TENANT)
                     }
                 ) {
@@ -289,7 +306,7 @@ private suspend fun refreshAccessToken(
             val response = submitForm<JsonObject>(
                 url = "$LIVE_AUTH_URL/oauth20_token.srf",
                 parameters = Parameters.build {
-                    append("client_id", BuildKeys.OAUTH_CLIENT_ID)
+                    append("client_id", microsoftOAuthClientId())
                     append("refresh_token", refreshToken)
                     append("grant_type", "refresh_token")
                 },
