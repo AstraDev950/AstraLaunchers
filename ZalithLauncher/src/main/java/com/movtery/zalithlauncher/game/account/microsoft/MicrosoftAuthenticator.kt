@@ -85,6 +85,8 @@ private const val TAG = "MicrosoftAuth"
 
 private val SCOPES = listOf("XboxLive.signin", "offline_access", "openid", "profile", "email")
 private const val TENANT = "/consumers"
+private val MICROSOFT_OAUTH_CLIENT_ID_PATTERN =
+    Regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
 
 /**
  * 轮询令牌时允许的最大连续网络失败次数
@@ -102,7 +104,7 @@ class MicrosoftOAuthNotConfiguredException : IllegalStateException()
  * Kept pure so the missing/whitespace configuration case can be unit-tested without network access.
  */
 internal fun requireMicrosoftOAuthClientId(configuredId: String): String {
-    return configuredId.trim().takeIf { it.isNotEmpty() }
+    return configuredId.trim().takeIf(MICROSOFT_OAUTH_CLIENT_ID_PATTERN::matches)
         ?: throw MicrosoftOAuthNotConfiguredException()
 }
 
