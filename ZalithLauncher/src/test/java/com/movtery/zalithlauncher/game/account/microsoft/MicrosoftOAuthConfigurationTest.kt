@@ -45,4 +45,14 @@ class MicrosoftOAuthConfigurationTest {
             // Expected: whitespace is not a valid client ID.
         }
     }
+
+    @Test
+    fun malformedClientIdFailsBeforeNetworkRequest() {
+        try {
+            requireMicrosoftOAuthClientId("not-a-client-id")
+            fail("A malformed Microsoft Entra client ID must be rejected.")
+        } catch (_: MicrosoftOAuthNotConfiguredException) {
+            // Expected: Entra application IDs must be GUIDs.
+        }
+    }
 }
