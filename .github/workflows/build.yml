@@ -129,20 +129,19 @@ jobs:
 
 
 
-      - name: Validate Microsoft OAuth configuration
+      - name: Check optional Microsoft OAuth configuration
         shell: bash
         run: |
           set -euo pipefail
           CLIENT_ID="$(printf '%s' "${OAUTH_CLIENT_ID:-}" | tr -d '[:space:]')"
           if [[ -z "$CLIENT_ID" ]]; then
-            echo "::error::Missing GitHub Actions secret OAUTH_CLIENT_ID. Configure a Microsoft Entra public-client app with device-code flow and personal Microsoft account support, then add its Application (client) ID as OAUTH_CLIENT_ID."
-            exit 1
-          fi
-          if [[ ! "$CLIENT_ID" =~ ^[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}$ ]]; then
+            echo "::warning::OAUTH_CLIENT_ID is not configured. The APK can still be built, but Microsoft sign-in will remain unavailable until a valid Microsoft Entra Application (client) ID is added."
+          elif [[ ! "$CLIENT_ID" =~ ^[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}$ ]]; then
             echo "::error::OAUTH_CLIENT_ID must be a Microsoft Entra Application (client) ID in GUID format."
             exit 1
+          else
+            echo "Microsoft OAuth configuration format is valid."
           fi
-          echo "Microsoft OAuth configuration is present."
 
       - name: Build APK for ${{ matrix.abi }}
         run: |
