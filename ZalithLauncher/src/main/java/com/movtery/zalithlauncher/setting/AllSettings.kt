@@ -346,7 +346,7 @@ object AllSettings : SettingsRegistry() {
     /**
      * 持续型节日彩蛋效果
      */
-    val launcherFestivalEffects = boolSetting("launcherFestivalEffects", true)
+    val launcherFestivalEffects = boolSetting("launcherFestivalEffects", false)
 
     /**
      * Liquid Glass 效果（PrismalAGSL），默认关闭
@@ -357,24 +357,24 @@ object AllSettings : SettingsRegistry() {
      * In-game Liquid Glass switch (game menu panels). Only takes effect while [launcherLiquidGlass]
      * is on, and never changes how the launcher UI itself looks.
      */
-    val gameLiquidGlass = boolSetting("gameLiquidGlass", true)
+    val gameLiquidGlass = boolSetting("gameLiquidGlass", false)
 
     /**
      * Glass quality used while [launcherLiquidGlass] is on in the launcher (LITE or FULL).
      * A per-profile theme can override it.
      */
-    val launcherGlassTier = enumSetting("launcherGlassTier", GlassTier.FULL)
+    val launcherGlassTier = enumSetting("launcherGlassTier", GlassTier.LITE)
 
     /**
      * Glass quality of the in-game menu panels (LITE or FULL), independent from the launcher tier.
      * Glass in game is switched on/off with [gameLiquidGlass].
      */
-    val gameGlassTier = enumSetting("gameGlassTier", GlassTier.FULL)
+    val gameGlassTier = enumSetting("gameGlassTier", GlassTier.LITE)
 
     /**
      * 启用页面切换动画
      */
-    val launcherSwapAnimEnabled = boolSetting("launcherSwapAnimEnabled", true)
+    val launcherSwapAnimEnabled = boolSetting("launcherSwapAnimEnabled", false)
 
     /**
      * 动画速度
