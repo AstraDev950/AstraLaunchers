@@ -220,10 +220,7 @@ class MainActivity : BaseAppCompatActivity() {
         //初始化通知管理（创建渠道）
         NotificationManager.initManager(this)
 
-        //拉取当月赞助者数据
-        lifecycleScope.launch {
-            sponsorsViewModel.loadOnStart()
-        }
+        // Sponsor data is loaded on demand when the user opens the sponsors dialog.
 
         //错误信息展示
         lifecycleScope.launch {
