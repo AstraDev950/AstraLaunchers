@@ -16,7 +16,7 @@ AstraDev maintains this fork and its Astra-specific branding and modifications. 
 
 ## Microsoft sign-in build configuration
 
-Microsoft account sign-in uses the device-code flow and requires a Microsoft Entra application (client) ID. Release builds must provide it as the `OAUTH_CLIENT_ID` environment variable or in `ZalithLauncher/.oauth_client_id.txt`. Configure the app registration for public-client/device-code sign-in and personal Microsoft accounts. The application ID is public configuration; never commit account passwords, access tokens, refresh tokens, or client secrets.
+Microsoft account sign-in uses the device-code flow and requires an Astra-owned Microsoft Entra application (client) ID. Configure the app registration for public-client/device-code sign-in and personal Microsoft accounts. Set the ID as the GitHub Actions repository variable `OAUTH_CLIENT_ID` (recommended), or use the `OAUTH_CLIENT_ID` Actions secret as a fallback. Local builds can use `OAUTH_CLIENT_ID` or `ZalithLauncher/.oauth_client_id.txt`. The same public client ID works for both supported Android ABIs; it is not a per-device value. A client ID is public configuration, not a client secret. Never commit account passwords, access tokens, refresh tokens, or client secrets.
 
 ## License and attribution
 
