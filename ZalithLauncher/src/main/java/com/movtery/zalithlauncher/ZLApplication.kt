@@ -130,9 +130,12 @@ class ZLApplication : Application(), SingletonImageLoader.Factory {
         return ImageLoader.Builder(context)
             .memoryCachePolicy(CachePolicy.ENABLED)
             .memoryCache {
+                // Keep image caching modest on low-RAM phones to leave more room for the game process.
+                val lowRamDevice = getSystemService(ActivityManager::class.java)?.isLowRamDevice == true
+                val maxCacheBytes = if (lowRamDevice) 8L else 16L
                 MemoryCache.Builder()
-                    .maxSizeBytes(20L * 1024 * 1024) // 20MB
-                    .weakReferencesEnabled(true) //弱引用
+                    .maxSizeBytes(maxCacheBytes * 1024 * 1024)
+                    .weakReferencesEnabled(true)
                     .build()
             }
             .diskCachePolicy(CachePolicy.ENABLED)
@@ -147,7 +150,7 @@ class ZLApplication : Application(), SingletonImageLoader.Factory {
                 add(GifDecoder.Factory())
                 add(SvgDecoder.Factory())
             }
-            .crossfade(true)
+            .crossfade(false)
             .build()
     }
 
