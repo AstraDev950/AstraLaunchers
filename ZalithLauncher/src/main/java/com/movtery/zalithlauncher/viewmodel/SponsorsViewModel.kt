@@ -158,7 +158,8 @@ private data class SponsorsCache(
 )
 
 class SponsorsViewModel : ViewModel() {
-    private val _data = MutableStateFlow<DataOperation>(DataOperation.Loading)
+    // Do not fetch remote sponsor data during launcher startup.
+    private val _data = MutableStateFlow<DataOperation>(DataOperation.Empty)
     val data = _data.asStateFlow()
 
     private val _ui = MutableStateFlow<SponsorsOperation>(SponsorsOperation.None)
