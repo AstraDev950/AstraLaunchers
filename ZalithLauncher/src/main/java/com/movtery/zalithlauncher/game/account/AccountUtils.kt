@@ -283,14 +283,22 @@ suspend fun Account.refreshMicrosoft(
         updateProgress = task::updateProgress,
         updateMessage = task::updateMessage,
     )
-    apply {
-        this.accessToken = newAcc.accessToken
-        this.clientToken = newAcc.clientToken
-        this.profileId = newAcc.profileId
-        this.username = newAcc.username
-        this.refreshToken = newAcc.refreshToken
-        this.xUid = newAcc.xUid
-    }
+    applyMicrosoftRefreshResult(newAcc)
+}
+
+/**
+ * Copies the complete refreshed Microsoft session back to the account being refreshed.
+ * Keeping expiresAt in sync prevents a freshly refreshed account being treated as expired.
+ */
+internal fun Account.applyMicrosoftRefreshResult(refreshed: Account) {
+    accessToken = refreshed.accessToken
+    expiresAt = refreshed.expiresAt
+    clientToken = refreshed.clientToken
+    profileId = refreshed.profileId
+    username = refreshed.username
+    refreshToken = refreshed.refreshToken
+    xUid = refreshed.xUid
+    skinModelType = refreshed.skinModelType
 }
 
 fun otherLogin(
