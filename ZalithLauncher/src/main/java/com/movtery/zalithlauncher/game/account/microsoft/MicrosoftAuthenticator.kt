@@ -124,6 +124,15 @@ const val LIVE_AUTH_URL = "https://login.live.com"
 const val XBL_AUTH_URL = "https://user.auth.xboxlive.com"
 const val XSTS_AUTH_URL = "https://xsts.auth.xboxlive.com"
 const val MINECRAFT_SERVICES_URL = "https://api.minecraftservices.com"
+const val MICROSOFT_TOKEN_URL = "https://login.microsoftonline.com/consumers/oauth2/v2.0/token"
+
+internal fun buildMicrosoftRefreshTokenParameters(clientId: String, refreshToken: String): Parameters =
+    Parameters.build {
+        append("client_id", clientId)
+        append("refresh_token", refreshToken)
+        append("grant_type", "refresh_token")
+        append("scope", SCOPES.joinToString(" "))
+    }
 
 /**
  * 从 Microsoft 身份验证终端节点获取设备代码响应
@@ -149,7 +158,7 @@ suspend fun fetchDeviceCodeResponse(context: CoroutineContext): DeviceCodeRespon
 suspend fun getTokenResponse(
     codeResponse: DeviceCodeResponse,
     context: CoroutineContext,
-    tokenUrl: String = "$MICROSOFT_AUTH_URL$TENANT/oauth2/v2.0/token",
+    tokenUrl: String = MICROSOFT_TOKEN_URL,
     checkCancelled: suspend (time: Int) -> Boolean
 ): TokenResponse = coroutineScope {
     var pollingInterval = codeResponse.interval * 1000L
@@ -314,12 +323,8 @@ private suspend fun refreshAccessToken(
     return withRetry {
         try {
             val response = submitForm<JsonObject>(
-                url = "$LIVE_AUTH_URL/oauth20_token.srf",
-                parameters = Parameters.build {
-                    append("client_id", microsoftOAuthClientId())
-                    append("refresh_token", refreshToken)
-                    append("grant_type", "refresh_token")
-                },
+                url = MICROSOFT_TOKEN_URL,
+                parameters = buildMicrosoftRefreshTokenParameters(microsoftOAuthClientId(), refreshToken),
                 context = context
             )
             Pair(
