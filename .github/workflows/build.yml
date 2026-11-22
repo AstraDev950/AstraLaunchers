@@ -130,14 +130,13 @@ jobs:
 
 
 
-      - name: Require Microsoft OAuth configuration
+      - name: Check Microsoft OAuth configuration
         shell: bash
         run: |
           set -euo pipefail
           CLIENT_ID="$(printf '%s' "${OAUTH_CLIENT_ID:-}" | tr -d '[:space:]')"
           if [[ -z "$CLIENT_ID" ]]; then
-            echo "::error::OAUTH_CLIENT_ID is required. Add a valid Microsoft Entra Application (client) ID as the OAUTH_CLIENT_ID repository variable or Actions secret before building Astra."
-            exit 1
+            echo "::warning::OAUTH_CLIENT_ID is not configured. Building a test APK is allowed, but Microsoft sign-in will report that OAuth is not configured."
           elif [[ ! "$CLIENT_ID" =~ ^[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}$ ]]; then
             echo "::error::OAUTH_CLIENT_ID must be a Microsoft Entra Application (client) ID in GUID format."
             exit 1
