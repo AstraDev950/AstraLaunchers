@@ -111,6 +111,14 @@ internal fun requireMicrosoftOAuthClientId(configuredId: String): String {
 private fun microsoftOAuthClientId(): String =
     requireMicrosoftOAuthClientId(BuildKeys.OAUTH_CLIENT_ID)
 
+/**
+ * The OAuth device authorization grant requires a five-second increase after slow_down.
+ */
+private const val DEVICE_CODE_SLOW_DOWN_INCREMENT_MS = 5_000L
+
+internal fun nextMicrosoftDeviceCodePollingIntervalMillis(currentIntervalMillis: Long): Long =
+    currentIntervalMillis + DEVICE_CODE_SLOW_DOWN_INCREMENT_MS
+
 const val MICROSOFT_AUTH_URL = "https://login.microsoftonline.com"
 const val LIVE_AUTH_URL = "https://login.live.com"
 const val XBL_AUTH_URL = "https://user.auth.xboxlive.com"
@@ -183,7 +191,7 @@ suspend fun getTokenResponse(
             when (val error = response["error"].text()) {
                 "authorization_pending" -> Unit
                 "slow_down" -> {
-                    pollingInterval += 1000L
+                    pollingInterval = nextMicrosoftDeviceCodePollingIntervalMillis(pollingInterval)
                     Logger.debug(TAG, "Slowing down polling to ${pollingInterval}ms")
                 }
                 else -> {
